@@ -53,6 +53,15 @@ const Navbar = () => {
               </li> 
                   )
                }
+               {
+                  data==null?(<span></span>):(
+                    <li className="nav-item">
+                <Link className="nav-link text-light" to="/about">
+                  Payment
+                </Link>
+              </li> 
+                  )
+               }
               <li className="nav-item">
                 <Link className="nav-link text-light" to="/contact">
                   Contact

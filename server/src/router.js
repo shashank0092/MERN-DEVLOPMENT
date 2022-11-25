@@ -2,10 +2,10 @@ var express= require('express')
 var router=express.Router();
 var RegisterModel=require('./Model')
 var bcrypt=require('bcryptjs')
+var bodyParser = require('body-parser');
+// var mailer=require('./nodemail')
+var nodemailer=require('nodemailer');
 
-
-
-var bodyParser = require('body-parser')
 
 
 router.use(bodyParser.urlencoded({ extended: false }))
@@ -38,8 +38,46 @@ router.post('/register',async(req,res)=>{
                     name,age,email,dob,address,mobNo,gender,about,password
                })
 
+
+              
+               
+
                var data=await newUser.save();
-               res.send({message:"Register Sucessfully",status:200});
+               
+
+               if(data){
+                    var transport=nodemailer.createTransport({
+                         service:'gmail',
+                         auth:{
+                             user:'shashank0865@gmail.com',
+                             pass:"huabwpthxdmvdfgt"
+                         }
+                     })
+
+                     var maildata={
+                         from:"shashank0865@gmail.com",
+                         to:`${data.email}`,
+                         subject:'This is subject',
+                         text:'This is tested data that we can not use'
+                     }
+
+                     var Sendmail= transport.sendMail(maildata,(err,maildata)=>{
+                         console.log("Sending Data")
+                         if(err){
+                             res.send({message:'Register But Not Email',status:201});
+                            
+                         }
+                         else{
+                              res.send({message:'Regsiter SuccessFully',status:200});
+                         }
+                     })
+
+                    
+                     
+               }
+                
+
+               
           }
           else{
                res.send({message:'This email Already Exists',status:201});
@@ -84,6 +122,36 @@ router.post('/login',async(req,res)=>{
           }
      }
 
+})
+
+
+router.post('/feedback',async(req,res)=>{
+     try{
+          var email=req.body.email;
+          var feedback=req.body.feedback;
+
+          if(!feedback){
+               res.send({message:'Write Feedback',status:201})
+          }
+          else{
+              try{
+               var user=await RegisterModel.findOne({email:email});
+               
+               
+              }
+              catch(err){
+               console.log(err);
+              }
+               
+          }
+
+
+
+
+     }
+     catch(err){
+
+     }
 })
 
 

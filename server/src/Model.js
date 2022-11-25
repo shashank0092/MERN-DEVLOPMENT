@@ -37,6 +37,9 @@ const RegistartionSchema=new mongoose.Schema({
         type:'string',
         required:true
     },
+    feedback:{
+        type:'string',
+    }
 })
 
 
